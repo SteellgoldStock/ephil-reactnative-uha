@@ -1,61 +1,62 @@
-import { useState } from "react";
-import { TextInput, Button, Text, ActivityIndicator } from "react-native-paper";
+// import { useState } from "react";
+// import { TextInput, Button, ActivityIndicator } from "react-native-paper";
+import { Text } from "react-native-paper";
 import { FormLayout } from "../components/centered-layout";
-import { View } from "react-native";
-import { AntDesign } from "@react-native-vector-icons/ant-design";
-import { useSQLiteContext } from "expo-sqlite";
-import { findUserByEmail, updateUserPassword } from "../services/database";
-import { hashPassword, generateTemporaryPassword } from "../services/auth";
-import { emailSchema } from "../schema/account";
+// import { View } from "react-native";
+// import { AntDesign } from "@react-native-vector-icons/ant-design";
+// import { useSQLiteContext } from "expo-sqlite";
+// import { findUserByEmail, updateUserPassword } from "../services/database";
+// import { hashPassword, generateTemporaryPassword } from "../services/auth";
+// import { emailSchema } from "../schema/account";
 
 const ForgotPasswordScreen = ({ navigation }) => {
-  const db = useSQLiteContext();
-  
-  const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-  const [newPassword, setNewPassword] = useState("");
+  // const db = useSQLiteContext();
 
-  const handleResetPassword = async () => {
-    setError("");
-    setSuccess("");
-    setNewPassword("");
+  // const [email, setEmail] = useState("");
+  // const [loading, setLoading] = useState(false);
+  // const [error, setError] = useState("");
+  // const [success, setSuccess] = useState("");
+  // const [newPassword, setNewPassword] = useState("");
 
-    const validated = emailSchema.safeParse({ email });
-    if (!validated.success) {
-      setError(validated.error.issues[0].message);
-      return;
-    }
+  // const handleResetPassword = async () => {
+  //   setError("");
+  //   setSuccess("");
+  //   setNewPassword("");
 
-    setLoading(true);
+  //   const validated = emailSchema.safeParse({ email });
+  //   if (!validated.success) {
+  //     setError(validated.error.issues[0].message);
+  //     return;
+  //   }
 
-    try {
-      const user = await findUserByEmail(db, email.toLowerCase());
-      if (!user) {
-        setError("Aucun compte trouve avec cet email");
-        setLoading(false);
-        return;
-      }
+  //   setLoading(true);
 
-      const tempPassword = generateTemporaryPassword();
-      const hashedPassword = await hashPassword(tempPassword);
+  //   try {
+  //     const user = await findUserByEmail(db, email.toLowerCase());
+  //     if (!user) {
+  //       setError("Aucun compte trouve avec cet email");
+  //       setLoading(false);
+  //       return;
+  //     }
 
-      await updateUserPassword(db, email.toLowerCase(), hashedPassword);
+  //     const tempPassword = generateTemporaryPassword();
+  //     const hashedPassword = await hashPassword(tempPassword);
 
-      setNewPassword(tempPassword);
-      setSuccess("Mot de passe temporaire créer!");
-    } catch (err) {
-      console.error("Password reset error:", err);
-      setError("Erreur lors de la reinitialisation. Veuillez reessayer.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     await updateUserPassword(db, email.toLowerCase(), hashedPassword);
+
+  //     setNewPassword(tempPassword);
+  //     setSuccess("Mot de passe temporaire créer!");
+  //   } catch (err) {
+  //     console.error("Password reset error:", err);
+  //     setError("Erreur lors de la reinitialisation. Veuillez reessayer.");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   return (
     <FormLayout>
-      <Text style={{ fontSize: 24, fontWeight: "bold", marginBottom: 20, textAlign: "center" }}>
+      {/* <Text style={{ fontSize: 24, fontWeight: "bold", marginBottom: 20, textAlign: "center" }}>
         Mot de passe oublie
       </Text>
 
@@ -73,7 +74,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
           autoCapitalize="none"
           disabled={loading || !!newPassword}
         />
-        
+
         <Button mode="contained" onPress={handleResetPassword} disabled={loading || !!newPassword}>
           {loading ? <ActivityIndicator color="#fff" size="small" /> : "Reinitialiser"}
         </Button>
@@ -107,10 +108,13 @@ const ForgotPasswordScreen = ({ navigation }) => {
             </View>
           )}
         </View>
-      )}
+      )}*/}
 
       <Text style={{ marginTop: 20, textAlign: "center" }}>
-        <Text style={{ textDecorationLine: "underline", color: "#7B1FA2" }} onPress={() => navigation.navigate("Login")}>
+        <Text
+          style={{ textDecorationLine: "underline", color: "#7B1FA2" }}
+          onPress={() => navigation.navigate("Login")}
+        >
           Retour a la connexion
         </Text>
       </Text>

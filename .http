@@ -1,0 +1,35 @@
+### Variables
+@baseUrl = https://api.penderlin.fr
+@contentType = application/json
+
+### Register new user
+
+POST {{baseUrl}}/auth/register
+Content-Type: {{contentType}}
+
+{
+  "name": "John DOE",
+  "email": "gaetan.doe@example.com",
+  "password": "Password123!"
+}
+
+### Login user
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: {{contentType}}
+
+{
+  "email": "gaetan.doe@example.com",
+  "password": "Password123!"
+}
+
+### Get user profile
+@accessToken = {{ login.response.body.access_token }}
+GET {{baseUrl}}/user/me
+Content-Type: {{contentType}}
+Authorization: Bearer {{accessToken}}
+
+### Delete user profile
+DELETE {{baseUrl}}/user/me
+Content-Type: {{contentType}}
+Authorization: Bearer {{accessToken}}

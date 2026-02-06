@@ -8,6 +8,7 @@ import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import HomeScreen from "./screens/HomeScreen";
 import ForgotPasswordScreen from "./screens/ForgotPasswordScreen";
+import CameraScreen from "./screens/CameraScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -56,6 +57,11 @@ export default function App() {
             name="Home"
             component={HomeScreen}
             options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Camera"
+            component={CameraScreen}
+            options={{ title: "Caméra", headerShown: true }}
           />
         </Stack.Navigator>
       </NavigationContainer>

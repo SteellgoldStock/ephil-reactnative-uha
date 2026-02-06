@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://api.penderlin.fr';
+const API_BASE_URL = "https://api.penderlin.fr";
 
 class ApiService {
   constructor() {
@@ -9,7 +9,7 @@ class ApiService {
     const url = `${this.baseUrl}${endpoint}`;
     const config = {
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         ...options.headers,
       },
       ...options,
@@ -17,7 +17,14 @@ class ApiService {
 
     try {
       const response = await fetch(url, config);
-      const data = await response.json();
+      const text = await response.text();
+      let data;
+      
+      try {
+        data = JSON.parse(text);
+      } catch (e) {
+        data = { message: text };
+      }
 
       if (!response.ok) {
         throw new Error(data.message || `HTTP Error: ${response.status}`);
@@ -25,15 +32,15 @@ class ApiService {
 
       return data;
     } catch (error) {
-      console.error('API Request Error:', error);
+      console.error("API Request Error:", error);
       throw error;
     }
   }
 
   // Auth endpoints
   async register(userData) {
-    return this.makeRequest('/auth/register', {
-      method: 'POST',
+    return this.makeRequest("/auth/register", {
+      method: "POST",
       body: JSON.stringify({
         name: `${userData.firstName} ${userData.lastName}`,
         email: userData.email,
@@ -43,8 +50,8 @@ class ApiService {
   }
 
   async login(credentials) {
-    return this.makeRequest('/auth/login', {
-      method: 'POST',
+    return this.makeRequest("/auth/login", {
+      method: "POST",
       body: JSON.stringify({
         email: credentials.email,
         password: credentials.password,
@@ -54,8 +61,8 @@ class ApiService {
 
   // User endpoints
   async getUserProfile(token) {
-    return this.makeRequest('/user/me', {
-      method: 'GET',
+    return this.makeRequest("/user/me", {
+      method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -63,8 +70,8 @@ class ApiService {
   }
 
   async deleteUser(token) {
-    return this.makeRequest('/user/me', {
-      method: 'DELETE',
+    return this.makeRequest("/user/me", {
+      method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
       },

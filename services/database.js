@@ -24,21 +24,21 @@ export const openDatabase = async () => {
 
 export const createUser = async (db, { firstName, lastName, email, password }) => {
   return await db.runAsync(
-    'INSERT INTO users (firstName, lastName, email, password) VALUES (?, ?, ?, ?)',
+    "INSERT INTO users (firstName, lastName, email, password) VALUES (?, ?, ?, ?)",
     [firstName, lastName, email, password]
   );
 };
 
 export const findUserByEmail = async (db, email) => {
   return await db.getFirstAsync(
-    'SELECT * FROM users WHERE email = ?',
+    "SELECT * FROM users WHERE email = ?",
     [email]
   );
 };
 
 export const updateUserPassword = async (db, email, newPassword) => {
   return await db.runAsync(
-    'UPDATE users SET password = ? WHERE email = ?',
+    "UPDATE users SET password = ? WHERE email = ?",
     [newPassword, email]
   );
 };

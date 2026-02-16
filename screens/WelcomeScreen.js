@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Button, Text, ActivityIndicator } from "react-native-paper";
+import { Text, ActivityIndicator } from "react-native-paper";
 import { View } from "react-native";
 import { CenteredLayout } from "../components/centered-layout";
 import { authService } from "../services/auth";
+import AppButton from "../components/ui/AppButton";
 
 const WelcomeScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
@@ -10,6 +11,7 @@ const WelcomeScreen = ({ navigation }) => {
   useEffect(() => {
     checkAuthStatus();
   }, []);
+
 
   const checkAuthStatus = async () => {
     try {
@@ -58,8 +60,8 @@ const WelcomeScreen = ({ navigation }) => {
     <CenteredLayout>
       <View style={{ alignItems: "center", marginBottom: 40 }}>
         <Text
+          variant="headlineLarge"
           style={{
-            fontSize: 32,
             fontWeight: "bold",
             marginBottom: 8,
             textAlign: "center",
@@ -69,10 +71,9 @@ const WelcomeScreen = ({ navigation }) => {
           Bienvenue
         </Text>
         <Text
+          variant="bodyLarge"
           style={{
-            fontSize: 16,
             textAlign: "center",
-            color: "#666",
             marginBottom: 20,
           }}
         >
@@ -81,27 +82,20 @@ const WelcomeScreen = ({ navigation }) => {
       </View>
 
       <View style={{ width: "100%", maxWidth: 300, gap: 12 }}>
-        <Button
-          mode="contained"
-          onPress={() => navigation.navigate("Login")}
-          style={{ backgroundColor: "#7B1FA2" }}
-          contentStyle={{ paddingVertical: 8 }}
-        >
+        <AppButton onPress={() => navigation.navigate("Login")}>
           Connexion
-        </Button>
+        </AppButton>
 
-        <Button
+        <AppButton
           mode="outlined"
           onPress={() => navigation.navigate("Register")}
-          style={{ borderColor: "#7B1FA2" }}
-          textColor="#7B1FA2"
-          contentStyle={{ paddingVertical: 8 }}
         >
           Inscription
-        </Button>
+        </AppButton>
       </View>
     </CenteredLayout>
   );
 };
+
 
 export default WelcomeScreen;

@@ -1,14 +1,16 @@
 import React, { useState } from "react";
-import { TextInput, Button, Text, ActivityIndicator } from "react-native-paper";
+import { Text } from "react-native-paper";
 import { FormLayout } from "../components/centered-layout";
 import { View } from "react-native";
 import { loginSchema } from "../schema/account";
-import { AntDesign } from "@react-native-vector-icons/ant-design";
 import { authService } from "../services/auth";
+import AppButton from "../components/ui/AppButton";
+import AppTextInput from "../components/ui/AppTextInput";
+import AppErrorMessage from "../components/ui/AppErrorMessage";
 
 const LoginScreen = ({ navigation }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("gaetan@vrai-email.com");
+  const [password, setPassword] = useState("100%Vrai@");
   const [loading, setLoading] = useState(false);
 
   const [error, setError] = useState("");
@@ -23,13 +25,11 @@ const LoginScreen = ({ navigation }) => {
 
     const validated = loginSchema.safeParse({ email, password });
     if (!validated.success) {
-      setErrors(
-        validated.error.issues.reduce((acc, issue) => {
-          acc[issue.path[0]] = issue.message;
-          return acc;
-        }, {}),
-      );
-
+      const fieldErrors = validated.error.issues.reduce((acc, issue) => {
+        acc[issue.path[0]] = issue.message;
+        return acc;
+      }, {});
+      setErrors(fieldErrors);
       setError(validated.error.issues[0].message);
       return;
     }
@@ -43,15 +43,7 @@ const LoginScreen = ({ navigation }) => {
       });
 
       if (response.user) {
-        // Extract first name and last name from the full name
-        const nameParts = response.user.name.split(" ");
-        const firstName = nameParts[0] || "";
-        const lastName = nameParts.slice(1).join(" ") || "";
-
         navigation.navigate("Home", {
-          firstName: firstName,
-          lastName: lastName,
-          email: response.user.email,
           user: response.user,
         });
       } else {
@@ -77,8 +69,8 @@ const LoginScreen = ({ navigation }) => {
   return (
     <FormLayout>
       <Text
+        variant="headlineSmall"
         style={{
-          fontSize: 24,
           fontWeight: "bold",
           marginBottom: 20,
           textAlign: "center",
@@ -88,75 +80,57 @@ const LoginScreen = ({ navigation }) => {
       </Text>
 
       <View style={{ gap: 10 }}>
-        <TextInput
+        <AppTextInput
           label="Email"
           value={email}
           onChangeText={setEmail}
-          mode="flat"
           error={!!errors.email}
+          errorText={errors.email}
           keyboardType="email-address"
           autoCapitalize="none"
           disabled={loading}
         />
 
-        <TextInput
+        <AppTextInput
           label="Mot de passe"
           value={password}
           onChangeText={setPassword}
-          mode="flat"
           secureTextEntry
           error={!!errors.password}
+          errorText={errors.password}
           disabled={loading}
         />
 
-        <Button mode="contained" onPress={handleLogin} disabled={loading}>
-          {loading ? (
-            <ActivityIndicator color="#fff" size="small" />
-          ) : (
-            "Connexion"
-          )}
-        </Button>
+        <AppButton loading={loading} onPress={handleLogin}>
+          Connexion
+        </AppButton>
       </View>
 
-      {error !== "" && (
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "red",
-            padding: 10,
-            textAlign: "center",
-            backgroundColor: "#f8d7da",
-            marginTop: 10,
-            gap: 2,
-          }}
-        >
-          <AntDesign name="alert" size={13} color="red" />
-          <Text style={{ color: "red", textAlign: "center" }}>{error}</Text>
-        </View>
-      )}
+      <AppErrorMessage message={error} />
 
-      <Text style={{ marginTop: 10, textAlign: "center" }}>
-        <Text
-          style={{ textDecorationLine: "underline", color: "#7B1FA2" }}
-          onPress={() => navigation.navigate("ForgotPassword")}
-        >
-          Mot de passe oublié ?
+      <View style={{ marginTop: 20, gap: 10 }}>
+        <Text style={{ textAlign: "center" }}>
+          <Text
+            style={{ textDecorationLine: "underline", color: "#7B1FA2" }}
+            onPress={() => navigation.navigate("ForgotPassword")}
+          >
+            Mot de passe oublié ?
+          </Text>
         </Text>
-      </Text>
 
-      <Text style={{ marginTop: 10, textAlign: "center" }}>
-        Vous n&apos;avez pas de compte ?{" "}
-        <Text
-          style={{ textDecorationLine: "underline", color: "#7B1FA2" }}
-          onPress={() => navigation.navigate("Register")}
-        >
-          S'inscrire
+        <Text style={{ textAlign: "center" }}>
+          Vous n&apos;avez pas de compte ?{" "}
+          <Text
+            style={{ textDecorationLine: "underline", color: "#7B1FA2" }}
+            onPress={() => navigation.navigate("Register")}
+          >
+            S'inscrire
+          </Text>
         </Text>
-      </Text>
+      </View>
     </FormLayout>
   );
 };
 
 export default LoginScreen;
+

@@ -1,34 +1,58 @@
-import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, DefaultTheme as NavigationDefaultTheme, DarkTheme as NavigationDarkTheme } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { PaperProvider } from "react-native-paper";
+import { PaperProvider, MD3LightTheme, MD3DarkTheme } from "react-native-paper";
+import { StatusBar } from "expo-status-bar";
+import useThemeStore from "./stores/themeStore";
 
 import WelcomeScreen from "./screens/WelcomeScreen";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import HomeScreen from "./screens/HomeScreen";
-import ForgotPasswordScreen from "./screens/ForgotPasswordScreen";
 import CameraScreen from "./screens/CameraScreen";
 import PoiScreen from "./screens/PoiScreen";
+import SettingsScreen from "./screens/SettingsScreen";
 
 const Stack = createNativeStackNavigator();
 
+const CombinedDefaultTheme = {
+  ...MD3LightTheme,
+  version: 3,
+  colors: {
+    ...MD3LightTheme.colors,
+    ...NavigationDefaultTheme.colors,
+  },
+};
+
+const CombinedDarkTheme = {
+  ...MD3DarkTheme,
+  version: 3,
+  colors: {
+    ...MD3DarkTheme.colors,
+    ...NavigationDarkTheme.colors,
+  },
+};
+
 export default function App() {
+  const { theme } = useThemeStore();
+  const isDarkMode = theme === "dark";
+  const activeTheme = isDarkMode ? CombinedDarkTheme : CombinedDefaultTheme;
+
   return (
     <PaperProvider
       settings={{
         rippleEffectEnabled: true,
       }}
-      theme={{ roundness: 0 }}
+      theme={activeTheme}
     >
-      <NavigationContainer>
+      <StatusBar style={isDarkMode ? "light" : "dark"} />
+      <NavigationContainer theme={activeTheme}>
         <Stack.Navigator
           initialRouteName="Welcome"
           screenOptions={{
             headerStyle: {
-              backgroundColor: "#fff",
+              backgroundColor: activeTheme.colors.surface,
             },
-            headerTintColor: "#000",
+            headerTintColor: activeTheme.colors.onSurface,
             headerTitleStyle: {
               fontWeight: "bold",
             },
@@ -50,11 +74,6 @@ export default function App() {
             options={{ headerShown: false }}
           />
           <Stack.Screen
-            name="ForgotPassword"
-            component={ForgotPasswordScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
             name="Home"
             component={HomeScreen}
             options={{ headerShown: false }}
@@ -69,8 +88,14 @@ export default function App() {
             component={PoiScreen}
             options={{ title: "Points d'intérêt", headerShown: true }}
           />
+          <Stack.Screen
+            name="Settings"
+            component={SettingsScreen}
+            options={{ title: "Paramètres", headerShown: true }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </PaperProvider>
   );
 }
+

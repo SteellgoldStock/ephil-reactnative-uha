@@ -7,11 +7,11 @@ import { View } from "react-native";
 import { authService } from "../services/auth";
 
 const RegisterForm = ({ navigation }) => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [city, setCity] = useState("");
+  const [firstName, setFirstName] = useState("Gaëtan");
+  const [lastName, setLastName] = useState("Gaëtan");
+  const [email, setEmail] = useState("gaetan@vrai-email.com");
+  const [password, setPassword] = useState("100%Vrai@");
+  const [city, setCity] = useState("Kingersheim");
   const [loading, setLoading] = useState(false);
 
   const [error, setError] = useState("");

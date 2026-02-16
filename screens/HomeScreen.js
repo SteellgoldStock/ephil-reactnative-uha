@@ -1,26 +1,32 @@
 import { useState, useEffect } from "react";
 import {
-  Button,
   Text,
   ActivityIndicator,
   Card,
-  Avatar,
+  useTheme,
 } from "react-native-paper";
-import { View, Alert, Image } from "react-native";
+import { View, Alert } from "react-native";
 import { CenteredLayout } from "../components/centered-layout";
 import { authService } from "../services/auth";
 import * as FileSystem from "expo-file-system/legacy";
+import useThemeStore from "../stores/themeStore";
+import AppButton from "../components/ui/AppButton";
+import UserProfileCard from "../components/ui/UserProfileCard";
 
 const HomeScreen = ({ route, navigation }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [logoutLoading, setLogoutLoading] = useState(false);
   const [profilePhoto, setProfilePhoto] = useState(null);
+  const { theme: activeThemeName } = useThemeStore();
+  const theme = useTheme();
 
   useEffect(() => {
     loadUserData();
     loadProfilePhoto();
   }, []);
+
+
 
   const loadUserData = async () => {
     try {
@@ -179,7 +185,12 @@ const HomeScreen = ({ route, navigation }) => {
     navigation.navigate("Poi");
   };
 
+  const handleOpenSettings = () => {
+    navigation.navigate("Settings");
+  };
+
   if (loading) {
+
     return (
       <CenteredLayout>
         <ActivityIndicator size="large" color="#7B1FA2" />
@@ -193,11 +204,10 @@ const HomeScreen = ({ route, navigation }) => {
   if (!user) {
     return (
       <CenteredLayout>
-        <Text style={{ fontSize: 18, textAlign: "center", marginBottom: 20 }}>
+        <Text variant="bodyLarge" style={{ textAlign: "center", marginBottom: 20 }}>
           Aucune donnée utilisateur trouvée
         </Text>
-        <Button
-          mode="contained"
+        <AppButton
           onPress={() =>
             navigation.reset({
               index: 0,
@@ -206,7 +216,7 @@ const HomeScreen = ({ route, navigation }) => {
           }
         >
           Retour à l'accueil
-        </Button>
+        </AppButton>
       </CenteredLayout>
     );
   }
@@ -215,35 +225,7 @@ const HomeScreen = ({ route, navigation }) => {
     <CenteredLayout>
       <View style={{ width: "100%", maxWidth: 400 }}>
         <Card style={{ marginBottom: 20, padding: 16 }}>
-          <View style={{ alignItems: "center", marginBottom: 16 }}>
-            {profilePhoto ? (
-              <Image
-                source={{ uri: profilePhoto }}
-                style={{
-                  width: 80,
-                  height: 80,
-                  borderRadius: 40,
-                  marginBottom: 12,
-                }}
-              />
-            ) : (
-              <Avatar.Text
-                size={80}
-                label={getInitials(user.name)}
-                style={{ backgroundColor: "#7B1FA2", marginBottom: 12 }}
-              />
-            )}
-
-            <Text
-              style={{ fontSize: 24, fontWeight: "bold", textAlign: "center" }}
-            >
-              {user.name}
-            </Text>
-
-            <Text style={{ fontSize: 16, color: "#666", textAlign: "center" }}>
-              {user.email}
-            </Text>
-          </View>
+          <UserProfileCard user={user} profilePhoto={profilePhoto} />
 
           <View style={{ gap: 8 }}>
             <View
@@ -251,6 +233,13 @@ const HomeScreen = ({ route, navigation }) => {
             >
               <Text style={{ fontWeight: "bold" }}>Membre depuis :</Text>
               <Text>{formatDate(user.created_at)}</Text>
+            </View>
+
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
+              <Text style={{ fontWeight: "bold" }}>Thème actif :</Text>
+              <Text>{activeThemeName === "light" ? "clair" : "sombre"}</Text>
             </View>
 
             {user.updated_at !== user.created_at && (
@@ -270,36 +259,26 @@ const HomeScreen = ({ route, navigation }) => {
         </Card>
 
         <View style={{ gap: 12 }}>
-          <Button
-            mode="contained"
-            onPress={handleOpenPoi}
-            style={{ backgroundColor: "#7B1FA2" }}
-          >
+          <AppButton onPress={handleOpenSettings}>
+            Paramètres
+          </AppButton>
+
+          <AppButton onPress={handleOpenPoi}>
             Voir les POI autour de moi
-          </Button>
+          </AppButton>
 
-          <Button
-            mode="contained"
-            onPress={handleOpenCamera}
-            style={{ backgroundColor: "#7B1FA2" }}
-          >
+          <AppButton onPress={handleOpenCamera}>
             Caméra
-          </Button>
+          </AppButton>
 
-          <Button
-            mode="contained"
+          <AppButton
             onPress={handleLogout}
-            disabled={logoutLoading}
-            style={{ backgroundColor: "#7B1FA2" }}
+            loading={logoutLoading}
           >
-            {logoutLoading ? (
-              <ActivityIndicator color="#fff" size="small" />
-            ) : (
-              "Déconnexion"
-            )}
-          </Button>
+            Déconnexion
+          </AppButton>
 
-          <Button
+          <AppButton
             mode="outlined"
             onPress={handleDeleteAccount}
             disabled={logoutLoading}
@@ -307,11 +286,12 @@ const HomeScreen = ({ route, navigation }) => {
             textColor="#d32f2f"
           >
             Supprimer mon compte
-          </Button>
+          </AppButton>
         </View>
       </View>
     </CenteredLayout>
   );
 };
+
 
 export default HomeScreen;

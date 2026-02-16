@@ -11,6 +11,7 @@ const RegisterForm = ({ navigation }) => {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [city, setCity] = useState("");
   const [loading, setLoading] = useState(false);
 
   const [error, setError] = useState("");
@@ -19,17 +20,19 @@ const RegisterForm = ({ navigation }) => {
     lastName: "",
     email: "",
     password: "",
+    city: "",
   });
 
   const handleRegister = async () => {
     setError("");
-    setErrors({ firstName: "", lastName: "", email: "", password: "" });
+    setErrors({ firstName: "", lastName: "", email: "", password: "", city: "" });
 
     const validated = registerSchema.safeParse({
       firstName,
       lastName,
       email,
       password,
+      city,
     });
     if (!validated.success) {
       setErrors(
@@ -156,6 +159,15 @@ const RegisterForm = ({ navigation }) => {
           mode="flat"
           secureTextEntry
           error={!!errors.password}
+          disabled={loading}
+        />
+
+        <TextInput
+          label="Ville"
+          value={city}
+          onChangeText={setCity}
+          mode="flat"
+          error={!!errors.city}
           disabled={loading}
         />
 

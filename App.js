@@ -9,6 +9,7 @@ import RegisterScreen from "./screens/RegisterScreen";
 import HomeScreen from "./screens/HomeScreen";
 import ForgotPasswordScreen from "./screens/ForgotPasswordScreen";
 import CameraScreen from "./screens/CameraScreen";
+import PoiScreen from "./screens/PoiScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -62,6 +63,11 @@ export default function App() {
             name="Camera"
             component={CameraScreen}
             options={{ title: "Caméra", headerShown: true }}
+          />
+          <Stack.Screen
+            name="Poi"
+            component={PoiScreen}
+            options={{ title: "Points d'intérêt", headerShown: true }}
           />
         </Stack.Navigator>
       </NavigationContainer>

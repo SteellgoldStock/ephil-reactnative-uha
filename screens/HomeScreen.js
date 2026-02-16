@@ -175,6 +175,10 @@ const HomeScreen = ({ route, navigation }) => {
     });
   };
 
+  const handleOpenPoi = () => {
+    navigation.navigate("Poi");
+  };
+
   if (loading) {
     return (
       <CenteredLayout>
@@ -266,6 +270,14 @@ const HomeScreen = ({ route, navigation }) => {
         </Card>
 
         <View style={{ gap: 12 }}>
+          <Button
+            mode="contained"
+            onPress={handleOpenPoi}
+            style={{ backgroundColor: "#7B1FA2" }}
+          >
+            Voir les POI autour de moi
+          </Button>
+
           <Button
             mode="contained"
             onPress={handleOpenCamera}
